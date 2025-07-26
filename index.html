@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberPass VPN - 极速·无界·军事级安全</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #0a1628;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* 动态网络背景 */
+        .network-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2332 50%, #0a1628 100%);
+        }
+
+        .network-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 255, 136, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(0, 255, 136, 0.06) 0%, transparent 50%);
+            animation: networkPulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes networkPulse {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 22, 40, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+             display: flex;
+             align-items: center;
+             font-size: 1.5rem;
+             font-weight: bold;
+             color: #00ff88;
+         }
+
+         .logo img {
+             width: 40px;
+             height: 40px;
+             margin-right: 0.8rem;
+             border-radius: 50%;
+             box-shadow: 0 2px 10px rgba(0, 255, 136, 0.3);
+         }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: #ffffff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: #00ff88;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero区域 */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 10;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #00ff88 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .hero .subtitle {
+            font-size: 1.3rem;
+            color: #b0c4de;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            color: #0a1628;
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 255, 136, 0.4);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            color: #00ff88;
+            border: 2px solid #00ff88;
+        }
+
+        .cta-secondary:hover {
+            background: #00ff88;
+            color: #0a1628;
+            transform: translateY(-2px);
+        }
+
+        /* 三大核心优势 */
+        .features {
+            padding: 5rem 2rem;
+            background: rgba(26, 35, 50, 0.5);
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #00ff88;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(10, 22, 40, 0.8);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ff88;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #00ff88;
+        }
+
+        .feature-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ff88;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            color: #b0c4de;
+            line-height: 1.6;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 动画效果 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+         .delay-2 { animation-delay: 0.4s; }
+         .delay-3 { animation-delay: 0.6s; }
+
+         /* 定价方案 */
+         .pricing {
+             padding: 5rem 2rem;
+             background: rgba(10, 22, 40, 0.3);
+         }
+
+         .pricing-container {
+             max-width: 800px;
+             margin: 0 auto;
+             text-align: center;
+         }
+
+         .pricing h2 {
+             font-size: 2.5rem;
+             margin-bottom: 3rem;
+             color: #00ff88;
+         }
+
+         .pricing-card {
+             background: rgba(26, 35, 50, 0.8);
+             border-radius: 20px;
+             padding: 3rem 2rem;
+             border: 2px solid rgba(0, 255, 136, 0.3);
+             position: relative;
+             overflow: hidden;
+         }
+
+         .pricing-card::before {
+             content: '';
+             position: absolute;
+             top: 0;
+             left: 0;
+             right: 0;
+             height: 4px;
+             background: linear-gradient(90deg, #00ff88, #00cc6a);
+         }
+
+         .pricing-header h3 {
+             font-size: 1.8rem;
+             color: #ffffff;
+             margin-bottom: 1rem;
+         }
+
+         .price {
+             display: flex;
+             align-items: baseline;
+             justify-content: center;
+             margin-bottom: 1rem;
+         }
+
+         .currency {
+             font-size: 1.5rem;
+             color: #00ff88;
+             margin-right: 0.2rem;
+         }
+
+         .amount {
+             font-size: 4rem;
+             font-weight: bold;
+             color: #00ff88;
+         }
+
+         .period {
+             font-size: 1.2rem;
+             color: #b0c4de;
+             margin-left: 0.2rem;
+         }
+
+         .discount-badge {
+             background: linear-gradient(135deg, #ff4757, #ff3742);
+             color: white;
+             padding: 0.5rem 1rem;
+             border-radius: 20px;
+             font-size: 0.9rem;
+             font-weight: bold;
+             display: inline-block;
+             margin-bottom: 2rem;
+         }
+
+         .pricing-features ul {
+             list-style: none;
+             text-align: left;
+             max-width: 400px;
+             margin: 0 auto 2rem;
+         }
+
+         .pricing-features li {
+             padding: 0.5rem 0;
+             color: #b0c4de;
+             font-size: 1.1rem;
+         }
+
+         .pricing-btn {
+             background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+             color: #0a1628;
+             padding: 1rem 3rem;
+             border-radius: 50px;
+             text-decoration: none;
+             font-weight: bold;
+             font-size: 1.2rem;
+             display: inline-block;
+             transition: all 0.3s ease;
+             box-shadow: 0 4px 20px rgba(0, 255, 136, 0.3);
+         }
+
+         .pricing-btn:hover {
+             transform: translateY(-2px);
+             box-shadow: 0 6px 25px rgba(0, 255, 136, 0.4);
+         }
+
+         /* 下载客户端 */
+         .download {
+             padding: 5rem 2rem;
+             background: rgba(26, 35, 50, 0.5);
+         }
+
+         .download-container {
+             max-width: 1200px;
+             margin: 0 auto;
+             text-align: center;
+         }
+
+         .download h2 {
+             font-size: 2.5rem;
+             margin-bottom: 1rem;
+             color: #00ff88;
+         }
+
+         .download-subtitle {
+             font-size: 1.2rem;
+             color: #b0c4de;
+             margin-bottom: 3rem;
+         }
+
+         .download-grid {
+             display: grid;
+             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+             gap: 2rem;
+         }
+
+         .download-card {
+             background: rgba(10, 22, 40, 0.8);
+             padding: 2rem 1.5rem;
+             border-radius: 15px;
+             border: 1px solid rgba(0, 255, 136, 0.2);
+             transition: all 0.3s ease;
+         }
+
+         .download-card:hover {
+             transform: translateY(-5px);
+             border-color: #00ff88;
+             box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+         }
+
+         .download-icon {
+             font-size: 3rem;
+             margin-bottom: 1rem;
+         }
+
+         .download-card h3 {
+             font-size: 1.3rem;
+             color: #ffffff;
+             margin-bottom: 0.5rem;
+         }
+
+         .download-card p {
+             color: #b0c4de;
+             margin-bottom: 1.5rem;
+             font-size: 0.9rem;
+         }
+
+         .download-btn {
+             background: transparent;
+             color: #00ff88;
+             border: 2px solid #00ff88;
+             padding: 0.8rem 1.5rem;
+             border-radius: 25px;
+             text-decoration: none;
+             font-weight: bold;
+             display: inline-block;
+             transition: all 0.3s ease;
+         }
+
+         .download-btn:hover {
+             background: #00ff88;
+             color: #0a1628;
+         }
+    </style>
+</head>
+<body>
+    <!-- 动态网络背景 -->
+    <div class="network-bg"></div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                 <img src="icon_circle.png" alt="CyberPass VPN Logo">
+                 CyberPass VPN
+             </div>
+            <ul class="nav-menu">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#features">功能</a></li>
+                <li><a href="#pricing">定价</a></li>
+                <li><a href="#download">下载</a></li>
+                <li><a href="#support">支持</a></li>
+            </ul>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <!-- Hero区域 -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1 class="fade-in">CyberPass VPN：极速·无界·军事级安全</h1>
+            <p class="subtitle fade-in delay-1">全球117个国家超12000台服务器，解锁任何内容，不留一丝痕迹</p>
+            <div class="cta-buttons fade-in delay-2">
+                <a href="#pricing" class="cta-btn cta-primary">
+                    🔥 限时83%优惠 立即获取
+                </a>
+                <a href="#download" class="cta-btn cta-secondary">
+                    ⚡ 免费体验24小时
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 三大核心优势 -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <h2 class="fade-in">三大核心优势</h2>
+            <div class="features-grid">
+                <div class="feature-card fade-in delay-1">
+                    <span class="feature-icon">🚀</span>
+                    <h3>极速连接</h3>
+                    <div class="feature-number">99.9%</div>
+                    <p>全球服务器网络，智能路由优化，确保最快连接速度，延迟低至5ms</p>
+                </div>
+                <div class="feature-card fade-in delay-2">
+                    <span class="feature-icon">🛡️</span>
+                    <h3>军事级加密</h3>
+                    <div class="feature-number">AES-256</div>
+                    <p>采用军事级AES-256加密技术，零日志政策，确保您的隐私绝对安全</p>
+                </div>
+                <div class="feature-card fade-in delay-3">
+                    <span class="feature-icon">🌍</span>
+                    <h3>全球覆盖</h3>
+                    <div class="feature-number">12000+</div>
+                    <p>覆盖117个国家和地区，超过12000台高速服务器，随时随地自由访问</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 定价方案 -->
+    <section class="pricing" id="pricing">
+        <div class="pricing-container">
+            <h2 class="fade-in">定价方案</h2>
+            <div class="pricing-card fade-in delay-1">
+                <div class="pricing-header">
+                    <h3>CyberPass VPN 专业版</h3>
+                    <div class="price">
+                        <span class="currency">¥</span>
+                        <span class="amount">500</span>
+                        <span class="period">/月</span>
+                    </div>
+                    <div class="discount-badge">限时83%优惠</div>
+                </div>
+                <div class="pricing-features">
+                    <ul>
+                        <li>✅ 无限流量使用</li>
+                        <li>✅ 全球12000+服务器</li>
+                        <li>✅ 军事级AES-256加密</li>
+                        <li>✅ 零日志政策</li>
+                        <li>✅ 同时连接10台设备</li>
+                        <li>✅ 24/7专业技术支持</li>
+                        <li>✅ 30天无条件退款</li>
+                    </ul>
+                </div>
+                <a href="#" class="pricing-btn">立即购买</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 下载客户端 -->
+    <section class="download" id="download">
+        <div class="download-container">
+            <h2 class="fade-in">下载客户端</h2>
+            <p class="download-subtitle fade-in delay-1">支持所有主流平台，一键安装，即刻体验</p>
+            <div class="download-grid">
+                <div class="download-card fade-in delay-1">
+                    <div class="download-icon">🖥️</div>
+                    <h3>Windows</h3>
+                    <p>支持 Windows 10/11</p>
+                    <a href="#" class="download-btn">下载 Windows 版</a>
+                </div>
+                <div class="download-card fade-in delay-2">
+                    <div class="download-icon">🍎</div>
+                    <h3>macOS</h3>
+                    <p>支持 macOS 10.15+</p>
+                    <a href="#" class="download-btn">下载 Mac 版</a>
+                </div>
+                <div class="download-card fade-in delay-3">
+                    <div class="download-icon">📱</div>
+                    <h3>iOS</h3>
+                    <p>支持 iOS 12.0+</p>
+                    <a href="#" class="download-btn">App Store 下载</a>
+                </div>
+                <div class="download-card fade-in delay-1">
+                    <div class="download-icon">🤖</div>
+                    <h3>Android</h3>
+                    <p>支持 Android 6.0+</p>
+                    <a href="#" class="download-btn">Google Play 下载</a>
+                </div>
+                <div class="download-card fade-in delay-2">
+                    <div class="download-icon">🐧</div>
+                    <h3>Linux</h3>
+                    <p>支持主流 Linux 发行版</p>
+                    <a href="#" class="download-btn">下载 Linux 版</a>
+                </div>
+                <div class="download-card fade-in delay-3">
+                    <div class="download-icon">🌐</div>
+                    <h3>浏览器扩展</h3>
+                    <p>Chrome/Firefox/Edge</p>
+                    <a href="#" class="download-btn">安装扩展</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 简单的移动端菜单切换
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            const navMenu = document.querySelector('.nav-menu');
+            navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 滚动动画触发
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
